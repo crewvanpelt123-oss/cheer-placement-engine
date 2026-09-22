@@ -1,0 +1,430 @@
+
+<h2 class="sr-only">Cheer Gym Tryout Evaluation and Roster Sorting App — All USASF 2025-2026 Divisions</h2>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--font-sans);background:var(--color-background-tertiary);color:var(--color-text-primary);min-height:100vh}
+  .app-header{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:24px 40px 20px}
+  .app-header-inner{max-width:1200px;margin:0 auto}
+  .eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:5px}
+  .app-title{font-size:24px;font-weight:500;letter-spacing:-0.3px}
+  .app-subtitle{font-size:13px;color:var(--color-text-secondary);margin-top:3px}
+  .main{max-width:1200px;margin:0 auto;padding:28px 40px 60px}
+  .step-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .step-badge{width:22px;height:22px;border-radius:50%;background:var(--color-text-primary);color:var(--color-background-primary);font-size:12px;font-weight:500;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .step-heading{font-size:12px;font-weight:500;letter-spacing:0.5px;color:var(--color-text-secondary);text-transform:uppercase}
+  .cards-grid{display:grid;grid-template-columns:1fr 420px;gap:16px;margin-bottom:20px}
+  .card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:18px 22px}
+  .card-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-tertiary);margin-bottom:12px;padding-bottom:10px;border-bottom:0.5px solid var(--color-border-tertiary)}
+  textarea{width:100%;height:160px;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);color:var(--color-text-primary);font-family:var(--font-mono);font-size:11px;padding:12px 14px;resize:vertical;outline:none;transition:border-color 0.15s;line-height:1.6}
+  textarea:focus{border-color:var(--color-border-primary)}
+  textarea::placeholder{color:var(--color-text-tertiary)}
+  .paste-note{margin-top:7px;font-size:11px;color:var(--color-text-tertiary);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+  .kbd{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary);border-radius:4px;padding:1px 5px;font-family:var(--font-mono);font-size:10px;color:var(--color-text-secondary)}
+  .athlete-count{margin-top:7px;font-size:11px;color:var(--color-text-info);font-family:var(--font-mono)}
+  .tier-section{margin-bottom:10px}
+  .tier-heading{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--color-text-tertiary);font-weight:500;padding:5px 0 4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:5px}
+  .team-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+  .team-item{display:flex;align-items:center;gap:8px;padding:6px 9px;border:0.5px solid var(--color-border-tertiary);border-radius:6px;cursor:pointer;transition:border-color 0.12s,background 0.12s;user-select:none;background:var(--color-background-primary)}
+  .team-item:hover{border-color:var(--color-border-secondary);background:var(--color-background-secondary)}
+  .team-item.on{border-color:var(--color-border-info);background:var(--color-background-info)}
+  .cb-box{width:13px;height:13px;border:0.5px solid var(--color-border-secondary);border-radius:3px;background:var(--color-background-primary);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.12s}
+  .team-item.on .cb-box{background:var(--color-text-primary);border-color:var(--color-text-primary)}
+  .cb-check{display:none;color:var(--color-background-primary)}
+  .team-item.on .cb-check{display:block}
+  .team-name{font-size:11.5px;font-weight:400;color:var(--color-text-primary);line-height:1.3}
+  .team-item.on .team-name{color:var(--color-text-info)}
+  .team-badge-pill{margin-left:auto;font-size:9px;font-family:var(--font-mono);color:var(--color-text-tertiary);background:var(--color-background-secondary);border-radius:20px;padding:1px 6px;white-space:nowrap;flex-shrink:0}
+  .divider-row{display:flex;align-items:center;gap:16px;margin:6px 0 16px}
+  .divider-line{flex:1;height:0.5px;background:var(--color-border-tertiary)}
+  .run-btn{background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);font-family:var(--font-sans);font-size:14px;font-weight:500;padding:12px 44px;cursor:pointer;transition:opacity 0.15s,transform 0.1s;display:block;margin:0 auto}
+  .run-btn:hover:not(:disabled){opacity:0.85}
+  .run-btn:active:not(:disabled){transform:scale(0.98)}
+  .results-meta{display:flex;align-items:center;gap:10px;margin:28px 0 16px}
+  .results-title{font-size:18px;font-weight:500}
+  .results-pill{font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:20px;padding:3px 10px}
+  .lb{margin-bottom:16px;background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);overflow:hidden}
+  .lb-head{padding:12px 18px;border-bottom:0.5px solid var(--color-border-tertiary);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .lb-div-name{font-size:14px;font-weight:500}
+  .lb-level-tag{font-size:10px;font-family:var(--font-mono);background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:4px;padding:2px 7px;color:var(--color-text-secondary)}
+  .lb-tier-tag{font-size:9px;font-family:var(--font-mono);border-radius:4px;padding:2px 7px}
+  .lb-tier-elite{background:#e6f1fb;color:#185fa5}
+  .lb-tier-prep{background:#eaf3de;color:#3b6d11}
+  .lb-tier-intl{background:#faeeda;color:#854f0b}
+  .lb-n{margin-left:auto;font-size:11px;color:var(--color-text-tertiary);font-family:var(--font-mono)}
+  .lb-alert{padding:9px 18px;background:var(--color-background-danger);border-bottom:0.5px solid var(--color-border-danger);display:flex;align-items:flex-start;gap:9px}
+  .lb-alert-icon{flex-shrink:0;margin-top:1px;color:var(--color-text-danger)}
+  .lb-alert-text{font-size:11.5px;color:var(--color-text-danger);line-height:1.5}
+  .lb-col-heads{display:grid;grid-template-columns:50px 1fr 76px 76px 80px;padding:7px 18px;background:var(--color-background-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+  .lb-ch{font-size:10px;letter-spacing:1px;text-transform:uppercase;color:var(--color-text-tertiary);font-family:var(--font-mono);text-align:right}
+  .lb-ch.left{text-align:left}
+  .lb-rows{max-height:300px;overflow-y:auto}
+  .lb-rows::-webkit-scrollbar{width:3px}
+  .lb-rows::-webkit-scrollbar-thumb{background:var(--color-border-secondary);border-radius:2px}
+  .lb-row{display:grid;grid-template-columns:50px 1fr 76px 76px 80px;padding:10px 18px;border-bottom:0.5px solid var(--color-border-tertiary);align-items:center;transition:background 0.1s}
+  .lb-row:last-child{border-bottom:none}
+  .lb-row:hover{background:var(--color-background-secondary)}
+  .lb-row.gold-row{background:var(--color-background-warning)}
+  .rank-cell{font-size:12px;font-weight:500;color:var(--color-text-secondary);font-family:var(--font-mono)}
+  .lb-row.gold-row .rank-cell{color:var(--color-text-warning)}
+  .name-cell{font-size:13px;display:flex;align-items:baseline;gap:7px;min-width:0}
+  .name-text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .birth-year{font-size:11px;font-family:var(--font-mono);color:var(--color-text-tertiary);flex-shrink:0}
+  .score-cell{font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);text-align:right;font-weight:500}
+  .stunt-cell,.tumble-cell{font-size:11px;font-family:var(--font-mono);color:var(--color-text-secondary);text-align:right}
+  .empty-lb{padding:24px 18px;text-align:center;font-size:13px;color:var(--color-text-tertiary)}
+</style>
+
+<div class="app-header">
+  <div class="app-header-inner">
+    <div class="eyebrow">USASF 2025–2026 Official Age Grid</div>
+    <div class="app-title">Cheer Gym Tryout Evaluator</div>
+    <div class="app-subtitle">All divisions sourced directly from the USASF 2025-2026 Cheer Age Grid document</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="cards-grid">
+    <div>
+      <div class="step-row"><div class="step-badge">1</div><div class="step-heading">Paste tryout data</div></div>
+      <div class="card">
+        <div class="card-label">Copy from Excel or CSV → paste below (header row required)</div>
+        <textarea id="pasteArea" placeholder="Paste tab-separated or comma-separated rows here.&#10;Required headers (case-insensitive): name, birthYear, gender, tierPreference&#10;Then one column per skill (TRUE/FALSE)."></textarea>
+        <div class="paste-note">
+          <span class="kbd">Ctrl+V</span> or <span class="kbd">Cmd+V</span>
+          <span style="color:var(--color-text-tertiary)">· Tab or comma separated · case-insensitive headers · TRUE/FALSE auto-parsed</span>
+        </div>
+        <div class="athlete-count" id="athleteCount">No data loaded — paste your roster above</div>
+      </div>
+    </div>
+    <div>
+      <div class="step-row"><div class="step-badge">2</div><div class="step-heading">Select offered teams</div></div>
+      <div class="card" style="overflow-y:auto;max-height:480px">
+        <div class="card-label">All USASF 2025-2026 divisions — toggle on / off</div>
+        <div id="teamList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-row">
+    <div class="divider-line"></div>
+    <div class="step-row" style="margin-bottom:0"><div class="step-badge">3</div><div class="step-heading">Run analysis</div></div>
+    <div class="divider-line"></div>
+  </div>
+  <button class="run-btn" onclick="runAnalysis()"><i class="ti ti-player-play" aria-hidden="true"></i> Run tryout sorting &amp; analysis</button>
+
+  <div id="resultsSection" style="display:none">
+    <div class="results-meta">
+      <span class="results-title">Leaderboards</span>
+      <span class="results-pill" id="resultsTag"></span>
+    </div>
+    <div id="leaderboards"></div>
+  </div>
+</div>
+
+<script>
+// ─── SKILL TIERS ─────────────────────────────────────────────────────────────
+const TUMBLING_TIERS={
+  1:['forwardRoll','backwardRoll','handstand','handstandBridgeBack','frontWalkover','backWalkover','cartwheel','roundoff'],
+  2:['standingSingleBHS','backWalkoverBHS','frontHandspring','roundoffBHS','roundoffConsecutiveBHS'],
+  3:['standingConsecutiveBHS','roundoffBackTuck','roundoffBHSBackTuck','punchFront','frontAerial'],
+  4:['standingSingleTuck','standingBHSTuck','standingBHSLayout','roundoffBHSLayout','specialtyRunningLayout'],
+  5:['jumpStandingTuck','standingBHSSeriesLayoutFull','roundoffBHSFull','specialtyRunningFull'],
+  6:['standingSingleFull','standingBHSSeriesDoubleFull','roundoffBHSDoubleFull','eliteBoundingPasses']
+};
+const STUNT_TIERS={
+  1:['thighStand','shoulderSit','prepLevelShowAndGo','twoLegWaistLevelStunt'],
+  2:['prepLevelTwoLegExtension','shoulderStand','straightCradleFromPrep','bracedOneLegPrepLevel'],
+  3:['extendedTwoLegStunt','prepLevelOneLegLib','fullUpToPrepLevel','straightCradleFromExtension'],
+  4:['extendedOneLegStunt','fullUpToExtendedTwoLeg','switchUpToPrepLevelLib','fullDownDismountFromExtension'],
+  5:['fullUpToExtendedOneLeg','doubleUpToPrepLevel','rewindToPrepLevel','kickFullCradleDismount'],
+  6:['doubleUpToExtendedOneLeg','rewindToExtendedPosition','freeFlippingTransitions','kickDoubleCradleDismount']
+};
+const ALL_T=Object.values(TUMBLING_TIERS).flat();
+const ALL_S=Object.values(STUNT_TIERS).flat();
+
+// ─── DIVISIONS (USASF 2025-2026 Age Grid) ────────────────────────────────────
+const DIVISIONS=[
+  {tier:'Elite Club',key:'EliteTiny1',      label:'Tiny',           badge:'L1',   byMin:2018,byMax:2020,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteMini1',      label:'Mini',           badge:'L1',   byMin:2016,byMax:2019,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteMini2',      label:'Mini',           badge:'L2',   byMin:2016,byMax:2019,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteYouth1',     label:'Youth',          badge:'L1',   byMin:2013,byMax:2018,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteYouth2',     label:'Youth',          badge:'L2',   byMin:2013,byMax:2018,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteYouth3',     label:'Youth',          badge:'L3',   byMin:2013,byMax:2018,              minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteYouth4',     label:'Youth',          badge:'L4',   byMin:2013,byMax:2018,              minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteYouth5',     label:'Youth',          badge:'L5',   byMin:2013,byMax:2018,              minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteJunior1',    label:'Junior',         badge:'L1',   byMin:2010,byMax:2017,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteJunior2',    label:'Junior',         badge:'L2',   byMin:2010,byMax:2017,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteJunior3',    label:'Junior',         badge:'L3',   byMin:2010,byMax:2017,              minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteJunior4',    label:'Junior',         badge:'L4',   byMin:2010,byMax:2017,              minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteJunior42',   label:'Junior',         badge:'L4.2', byMin:2010,byMax:2017,              minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteJunior5',    label:'Junior',         badge:'L5',   byMin:2010,byMax:2017,              minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteJunior6',    label:'Junior',         badge:'L6',   byMin:2010,byMax:2017,              minS:6,minT:6,min:5},
+  {tier:'Elite Club',key:'EliteSenior1',    label:'Senior',         badge:'L1',   byMin:2006,byMax:2013,byMinMonth:true,minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteSenior2',    label:'Senior',         badge:'L2',   byMin:2006,byMax:2013,byMinMonth:true,minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSenior3',    label:'Senior',         badge:'L3',   byMin:2006,byMax:2013,byMinMonth:true,minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteSenior4',    label:'Senior',         badge:'L4',   byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSenior42',   label:'Senior',         badge:'L4.2', byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSenior5',    label:'Senior',         badge:'L5',   byMin:2006,byMax:2013,byMinMonth:true,minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed3',label:'Senior Coed',    badge:'L3',   byMin:2006,byMax:2013,byMinMonth:true,minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed4',label:'Senior Coed',    badge:'L4',   byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed42',label:'Senior Coed',   badge:'L4.2', byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed5',label:'Senior Coed',    badge:'L5',   byMin:2006,byMax:2013,byMinMonth:true,minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpen4',label:'Senior Open',    badge:'L4',   byMax:2008,byMaxMonth:true,         minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpen5',label:'Senior Open',    badge:'L5',   byMax:2008,byMaxMonth:true,         minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpenCoed4',label:'Senior Open Coed',badge:'L4',byMax:2008,byMaxMonth:true,      minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpenCoed5',label:'Senior Open Coed',badge:'L5',byMax:2008,byMaxMonth:true,      minS:5,minT:5,min:5},
+  // International — NT means tL must equal 0 (non-tumbling)
+  {tier:'Elite International',key:'IntlOpen6',   label:'International Open',   badge:'L6',   byMax:2008,byMaxMonth:true,minS:6,minT:6,min:16},
+  {tier:'Elite International',key:'IntlOpen7',   label:'International Open',   badge:'L7',   byMax:2008,byMaxMonth:true,minS:6,minT:6,min:16},
+  {tier:'Elite International',key:'IntlOpenNT6', label:'International Open NT',badge:'L6 NT',byMax:2008,byMaxMonth:true,minS:6,minT:'NT',min:16},
+  {tier:'Elite International',key:'U181',        label:'U18',                  badge:'L1',   byMin:2007,byMax:2012,minS:1,minT:1,min:16},
+  {tier:'Elite International',key:'U182',        label:'U18',                  badge:'L2',   byMin:2007,byMax:2012,minS:2,minT:2,min:16},
+  {tier:'Elite International',key:'U183',        label:'U18',                  badge:'L3',   byMin:2007,byMax:2012,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U184',        label:'U18',                  badge:'L4',   byMin:2007,byMax:2012,minS:4,minT:4,min:16},
+  {tier:'Elite International',key:'U18Coed3',    label:'U18 Coed',             badge:'L3',   byMin:2007,byMax:2012,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U18Coed4',    label:'U18 Coed',             badge:'L4',   byMin:2007,byMax:2012,minS:4,minT:4,min:16},
+  {tier:'Elite International',key:'U161',        label:'U16',                  badge:'L1',   byMin:2009,byMax:2014,minS:1,minT:1,min:16},
+  {tier:'Elite International',key:'U162',        label:'U16',                  badge:'L2',   byMin:2009,byMax:2014,minS:2,minT:2,min:16},
+  {tier:'Elite International',key:'U163',        label:'U16',                  badge:'L3',   byMin:2009,byMax:2014,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U164',        label:'U16',                  badge:'L4',   byMin:2009,byMax:2014,minS:4,minT:4,min:16},
+  // Prep
+  {tier:'Prep',key:'PrepTiny11',    label:'Prep Tiny',   badge:'L1.1',byMin:2018,byMax:2020,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini11',    label:'Prep Mini',   badge:'L1.1',byMin:2016,byMax:2019,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini21',    label:'Prep Mini',   badge:'L2.1',byMin:2016,byMax:2019,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini22',    label:'Prep Mini',   badge:'L2.2',byMin:2016,byMax:2019,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepYouth11',   label:'Prep Youth',  badge:'L1.1',byMin:2013,byMax:2018,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth21',   label:'Prep Youth',  badge:'L2.1',byMin:2013,byMax:2018,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth22',   label:'Prep Youth',  badge:'L2.2',byMin:2013,byMax:2018,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepYouth31',   label:'Prep Youth',  badge:'L3.1',byMin:2013,byMax:2018,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth32',   label:'Prep Youth',  badge:'L3.2',byMin:2013,byMax:2018,minS:3,minT:2,min:5},
+  {tier:'Prep',key:'PrepJunior11',  label:'Prep Junior', badge:'L1.1',byMin:2010,byMax:2017,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior21',  label:'Prep Junior', badge:'L2.1',byMin:2010,byMax:2017,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior22',  label:'Prep Junior', badge:'L2.2',byMin:2010,byMax:2017,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepJunior31',  label:'Prep Junior', badge:'L3.1',byMin:2010,byMax:2017,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior32',  label:'Prep Junior', badge:'L3.2',byMin:2010,byMax:2017,minS:3,minT:2,min:5},
+  {tier:'Prep',key:'PrepSenior11',  label:'Prep Senior', badge:'L1.1',byMin:2006,byMax:2014,byMinMonth:true,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior21',  label:'Prep Senior', badge:'L2.1',byMin:2006,byMax:2014,byMinMonth:true,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior22',  label:'Prep Senior', badge:'L2.2',byMin:2006,byMax:2014,byMinMonth:true,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepSenior31',  label:'Prep Senior', badge:'L3.1',byMin:2006,byMax:2014,byMinMonth:true,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior32',  label:'Prep Senior', badge:'L3.2',byMin:2006,byMax:2014,byMinMonth:true,minS:3,minT:2,min:5},
+];
+
+const DEFAULT_ON=new Set(['EliteTiny1','EliteMini2','EliteJunior42','EliteSeniorCoed5','IntlOpen6','IntlOpenNT6','PrepSenior32','PrepJunior32']);
+const activeDiv={};
+DIVISIONS.forEach(d=>{activeDiv[d.key]=DEFAULT_ON.has(d.key);});
+
+let athletes=[];
+
+// ─── LEVEL CALCULATORS ───────────────────────────────────────────────────────
+function tLevel(skills){
+  let l=0;
+  for(let t=1;t<=6;t++){
+    if(TUMBLING_TIERS[t].every(k=>skills[k]===true)){l=t;}
+    else break;
+  }
+  return l;
+}
+function sLevel(skills){
+  let l=0;
+  for(let t=1;t<=6;t++){
+    if(STUNT_TIERS[t].every(k=>skills[k]===true)){l=t;}
+    else break;
+  }
+  return l;
+}
+function evalA(a){
+  const tL=tLevel(a.tumblingSkills||{});
+  const sL=sLevel(a.stuntSkills||{});
+  // score = sL + tL/10, rounded to 1 decimal to avoid float drift
+  const score=Math.round((sL+tL/10)*10)/10;
+  return{...a,tL,sL,score};
+}
+
+// ─── ELIGIBILITY ─────────────────────────────────────────────────────────────
+// All rules come directly from the USASF 2025-2026 Age Grid document.
+// minT:'NT' means the division requires tL === 0 (non-tumbling).
+// byMinMonth / byMaxMonth: we only have birth year (not exact date),
+//   so we accept the boundary year as eligible (year-level granularity).
+function isEligible(a,div){
+  const b=a.birthYear; const s=a.sL; const t=a.tL;
+  if(b===null||b===undefined) return false;
+  if(div.byMin!==undefined && b<div.byMin) return false;
+  if(div.byMax!==undefined && b>div.byMax) return false;
+  if(s<div.minS) return false;
+  if(div.minT==='NT'){
+    // Non-tumbling division: athlete must have zero tumbling skills completed
+    if(t!==0) return false;
+  } else {
+    if(t<div.minT) return false;
+  }
+  return true;
+}
+
+// ─── GOLF RANK (PGA standard) ────────────────────────────────────────────────
+function golfRank(sorted){
+  const out=[];let i=0;
+  while(i<sorted.length){
+    const sc=sorted[i].score;let j=i;
+    while(j<sorted.length&&sorted[j].score===sc)j++;
+    const tie=j-i>1;
+    for(let k=i;k<j;k++) out.push({...sorted[k],rank:i+1,tie});
+    i=j;
+  }
+  return out;
+}
+
+// ─── CSV / TSV PARSER ────────────────────────────────────────────────────────
+// Handles both comma-separated and tab-separated input.
+// Header matching is case-insensitive and trims whitespace.
+function parsePaste(text){
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2) return null;
+  // Auto-detect delimiter: if first line has more tabs than commas, use tab
+  const firstLine=lines[0];
+  const tabCount=(firstLine.match(/\t/g)||[]).length;
+  const commaCount=(firstLine.match(/,/g)||[]).length;
+  const delim=tabCount>=commaCount?'\t':',';
+  const rawHeaders=firstLine.split(delim).map(h=>h.trim());
+  // Build a case-insensitive header→index map
+  const hMap={};
+  rawHeaders.forEach((h,i)=>{hMap[h.toLowerCase()]=i;});
+  // Require at minimum 'name' and 'birthyear'
+  if(hMap['name']===undefined&&hMap['Name']===undefined) {
+    if(!Object.keys(hMap).some(k=>k==='name')) return null;
+  }
+  if(!Object.keys(hMap).some(k=>k==='birthyear')) return null;
+
+  // Helper: get column value case-insensitively
+  const get=(cols,key)=>{
+    const idx=hMap[key.toLowerCase()];
+    return idx!==undefined?(cols[idx]||'').trim():'';
+  };
+
+  return lines.slice(1).map((line,i)=>{
+    const cols=line.split(delim).map(c=>c.trim());
+    const ts={};
+    ALL_T.forEach(s=>{
+      const v=get(cols,s).toUpperCase();
+      ts[s]=v==='TRUE'||v==='1'||v==='YES';
+    });
+    const ss={};
+    ALL_S.forEach(s=>{
+      const v=get(cols,s).toUpperCase();
+      ss[s]=v==='TRUE'||v==='1'||v==='YES';
+    });
+    const rawYear=parseInt(get(cols,'birthYear'));
+    const rawName=get(cols,'name')||get(cols,'Name');
+    return{
+      id:String(i+1),
+      name:rawName||`[no name — row ${i+2}]`,
+      birthYear:isNaN(rawYear)?null:rawYear,
+      gender:get(cols,'gender'),
+      tierPreference:get(cols,'tierPreference'),
+      tumblingSkills:ts,
+      stuntSkills:ss
+    };
+  }).filter(a=>a.name&&!a.name.startsWith('[no name'));
+}
+
+// ─── RENDER TEAMS CHECKLIST ───────────────────────────────────────────────────
+function renderTeams(){
+  const el=document.getElementById('teamList');el.innerHTML='';
+  const tiers=[...new Set(DIVISIONS.map(d=>d.tier))];
+  tiers.forEach(tier=>{
+    const divs=DIVISIONS.filter(d=>d.tier===tier);
+    const section=document.createElement('div');section.className='tier-section';
+    const head=document.createElement('div');head.className='tier-heading';head.textContent=tier;
+    section.appendChild(head);
+    const grid=document.createElement('div');grid.className='team-grid';
+    divs.forEach(d=>{
+      const on=activeDiv[d.key];
+      const item=document.createElement('div');
+      item.className='team-item'+(on?' on':'');
+      item.innerHTML=`<div class="cb-box"><i class="ti ti-check cb-check" style="font-size:10px" aria-hidden="true"></i></div><span class="team-name">${d.label}</span><span class="team-badge-pill">${d.badge}</span>`;
+      item.onclick=()=>{activeDiv[d.key]=!activeDiv[d.key];renderTeams();};
+      grid.appendChild(item);
+    });
+    section.appendChild(grid);
+    el.appendChild(section);
+  });
+}
+
+function tierTagClass(tier){
+  if(tier.startsWith('Elite Club')) return 'lb-tier-elite';
+  if(tier.startsWith('Elite Intl')||tier.startsWith('Elite International')) return 'lb-tier-intl';
+  return 'lb-tier-prep';
+}
+
+// ─── RUN ANALYSIS ─────────────────────────────────────────────────────────────
+function runAnalysis(){
+  if(!athletes.length){alert('Paste your roster data first.');return;}
+  const evaled=athletes.map(evalA);
+  const container=document.getElementById('leaderboards');container.innerHTML='';
+  const chosen=DIVISIONS.filter(d=>activeDiv[d.key]);
+  document.getElementById('resultsTag').textContent=`${evaled.length} athletes · ${chosen.length} divisions`;
+  if(!chosen.length){container.innerHTML='<div style="padding:40px;text-align:center;font-size:13px;color:var(--color-text-tertiary)">No divisions selected.</div>';document.getElementById('resultsSection').style.display='block';return;}
+
+  chosen.forEach(div=>{
+    const elig=evaled.filter(a=>isEligible(a,div));
+    const ranked=golfRank([...elig].sort((a,b)=>b.score-a.score));
+    const warn=elig.length<div.min;
+    const lb=document.createElement('div');lb.className='lb';
+
+    let html=`<div class="lb-head">
+      <span class="lb-div-name">${div.label}</span>
+      <span class="lb-level-tag">${div.badge}</span>
+      <span class="lb-tier-tag ${tierTagClass(div.tier)}">${div.tier}</span>
+      <span class="lb-n">${elig.length} athlete${elig.length!==1?'s':''}</span>
+    </div>`;
+
+    if(warn) html+=`<div class="lb-alert">
+      <i class="ti ti-alert-triangle lb-alert-icon" aria-hidden="true" style="font-size:15px"></i>
+      <div class="lb-alert-text"><strong>USASF compliance alert:</strong> ${elig.length} eligible athlete${elig.length!==1?'s':''} — minimum required for this division is ${div.min}. Per the USASF Age Grid, a penalty may be assessed for taking the floor below minimum.</div>
+    </div>`;
+
+    if(!ranked.length){
+      html+=`<div class="empty-lb">No eligible athletes for this division.</div>`;
+    } else {
+      html+=`<div class="lb-col-heads">
+        <span class="lb-ch left">Rank</span>
+        <span class="lb-ch left" style="text-align:left">Athlete</span>
+        <span class="lb-ch">Score</span>
+        <span class="lb-ch">Stunt</span>
+        <span class="lb-ch">Tumble</span>
+      </div><div class="lb-rows">`;
+      ranked.forEach(r=>{
+        const byLabel=r.birthYear!==null&&r.birthYear!==undefined?r.birthYear:'—';
+        html+=`<div class="lb-row${r.rank===1?' gold-row':''}">
+          <span class="rank-cell">${r.tie?'T':''}${r.rank}</span>
+          <span class="name-cell"><span class="name-text">${r.name}</span><span class="birth-year">${byLabel}</span></span>
+          <span class="score-cell">${r.score.toFixed(1)}</span>
+          <span class="stunt-cell">L${r.sL}</span>
+          <span class="tumble-cell">L${r.tL}</span>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+    lb.innerHTML=html;
+    container.appendChild(lb);
+  });
+
+  document.getElementById('resultsSection').style.display='block';
+  setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+// ─── PASTE HANDLER ────────────────────────────────────────────────────────────
+document.getElementById('pasteArea').addEventListener('paste',function(){
+  setTimeout(()=>{
+    const parsed=parsePaste(this.value);
+    if(parsed&&parsed.length){
+      athletes=parsed;
+      document.getElementById('athleteCount').textContent=`Parsed ${athletes.length} athletes from pasted data`;
+    } else {
+      athletes=[];
+      document.getElementById('athleteCount').textContent='Could not parse — ensure "name" and "birthYear" column headers are present';
+    }
+  },50);
+});
+
+renderTeams();
+</script>

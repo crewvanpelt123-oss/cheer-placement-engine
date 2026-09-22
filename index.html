@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cheer Gym Tryout Evaluator — USASF 2025-2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f6f5f1;
+  --surface:#ffffff;
+  --surface2:#f0efe9;
+  --surface3:#e8e7e0;
+  --border:rgba(0,0,0,0.09);
+  --border2:rgba(0,0,0,0.16);
+  --text:#181815;
+  --text2:#52524e;
+  --text3:#8c8c86;
+  --blue:#1a5fb4;
+  --blue-bg:#e8f0fc;
+  --green:#2e7d32;
+  --green-bg:#e8f5e9;
+  --amber:#7c5500;
+  --amber-bg:#fff8e1;
+  --red:#b71c1c;
+  --red-bg:#fde8e8;
+  --orange:#e65100;
+  --orange-bg:#fff3e0;
+  --gold:#92600a;
+  --gold-bg:#fef9ec;
+  --radius:10px;
+  --radius-sm:6px;
+  --radius-xs:4px;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.05);
+  --shadow-lg:0 4px 16px rgba(0,0,0,0.10),0 2px 6px rgba(0,0,0,0.06);
+}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',system-ui,sans-serif;font-size:14px;line-height:1.5;min-height:100vh}
+
+/* ── HEADER ── */
+.app-header{background:var(--surface);border-bottom:1px solid var(--border);padding:22px 40px 18px}
+.app-header-inner{max-width:1240px;margin:0 auto;display:flex;align-items:flex-end;justify-content:space-between;gap:16px}
+.eyebrow{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px;font-weight:500}
+.app-title{font-size:21px;font-weight:600;letter-spacing:-0.3px}
+.app-subtitle{font-size:12px;color:var(--text2);margin-top:2px}
+.header-badge{background:var(--blue-bg);color:var(--blue);font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:20px;border:1px solid rgba(26,95,180,0.2);white-space:nowrap;flex-shrink:0}
+
+/* ── MAIN ── */
+.main{max-width:1240px;margin:0 auto;padding:24px 40px 60px}
+
+.step-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.step-badge{width:22px;height:22px;border-radius:50%;background:var(--text);color:#fff;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-heading{font-size:11px;font-weight:600;letter-spacing:1px;color:var(--text2);text-transform:uppercase}
+
+.cards-grid{display:grid;grid-template-columns:1fr 380px;gap:16px;margin-bottom:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;box-shadow:var(--shadow)}
+.card-label{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid var(--border);font-weight:500}
+
+textarea{width:100%;height:150px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:'DM Mono',monospace;font-size:10.5px;padding:10px 12px;resize:vertical;outline:none;transition:border-color .15s;line-height:1.6}
+textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,180,0.08)}
+textarea::placeholder{color:var(--text3)}
+.paste-note{margin-top:6px;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+kbd{background:var(--surface2);border:1px solid var(--border2);border-radius:3px;padding:1px 5px;font-family:'DM Mono',monospace;font-size:10px;color:var(--text2)}
+.athlete-count{margin-top:6px;font-size:11px;color:var(--blue);font-family:'DM Mono',monospace}
+
+/* ── TEAM CHECKLIST ── */
+.team-scroll{overflow-y:auto;max-height:430px}
+.team-scroll::-webkit-scrollbar{width:3px}
+.team-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.tier-section{margin-bottom:9px}
+.tier-heading{font-size:9.5px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);font-weight:600;padding:4px 0 3px;border-bottom:1px solid var(--border);margin-bottom:4px}
+.team-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.team-item{display:flex;align-items:center;gap:7px;padding:5px 8px;border:1px solid var(--border);border-radius:var(--radius-xs);cursor:pointer;transition:border-color .12s,background .12s;user-select:none;background:var(--surface)}
+.team-item:hover{border-color:var(--border2);background:var(--surface2)}
+.team-item.on{border-color:rgba(26,95,180,0.4);background:var(--blue-bg)}
+.cb-box{width:13px;height:13px;border:1px solid var(--border2);border-radius:3px;background:var(--surface);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .12s;font-size:9px}
+.team-item.on .cb-box{background:var(--text);border-color:var(--text);color:#fff}
+.team-name{font-size:11px;font-weight:400;color:var(--text);line-height:1.3}
+.team-item.on .team-name{color:var(--blue);font-weight:500}
+.team-badge-pill{margin-left:auto;font-size:9px;font-family:'DM Mono',monospace;color:var(--text3);background:var(--surface2);border-radius:20px;padding:1px 5px;white-space:nowrap;flex-shrink:0}
+
+/* ── DIVIDER ── */
+.divider-row{display:flex;align-items:center;gap:16px;margin:8px 0 16px}
+.divider-line{flex:1;height:1px;background:var(--border)}
+
+/* ── RUN BUTTON ── */
+.run-btn{background:var(--text);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:12px 44px;cursor:pointer;transition:opacity .15s,transform .1s;display:block;margin:0 auto;letter-spacing:.1px}
+.run-btn:hover{opacity:.85}
+.run-btn:active{transform:scale(.98)}
+
+/* ── RESULTS ── */
+.results-meta{display:flex;align-items:center;gap:10px;margin:24px 0 14px;flex-wrap:wrap}
+.results-title{font-size:17px;font-weight:600}
+.results-pill{font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:3px 10px}
+
+/* ── LEADERBOARD ── */
+.lb{margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.lb-head{padding:11px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lb-div-name{font-size:14px;font-weight:600}
+.lb-level-tag{font-size:10px;font-family:'DM Mono',monospace;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-xs);padding:2px 6px;color:var(--text2)}
+.lb-tier-elite{background:var(--blue-bg);color:var(--blue);font-size:9px;font-family:'DM Mono',monospace;border-radius:var(--radius-xs);padding:2px 6px;font-weight:500}
+.lb-tier-intl{background:var(--amber-bg);color:var(--amber);font-size:9px;font-family:'DM Mono',monospace;border-radius:var(--radius-xs);padding:2px 6px;font-weight:500}
+.lb-tier-prep{background:var(--green-bg);color:var(--green);font-size:9px;font-family:'DM Mono',monospace;border-radius:var(--radius-xs);padding:2px 6px;font-weight:500}
+.lb-n{margin-left:auto;font-size:11px;color:var(--text3);font-family:'DM Mono',monospace}
+
+.lb-alert{padding:8px 16px;background:var(--red-bg);border-bottom:1px solid rgba(183,28,28,0.15);display:flex;align-items:flex-start;gap:8px}
+.lb-alert-icon{flex-shrink:0;color:var(--red);font-size:14px;margin-top:1px}
+.lb-alert-text{font-size:11px;color:var(--red);line-height:1.5}
+
+.lb-col-heads{display:grid;grid-template-columns:46px 1fr 68px 64px 68px 32px;padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.lb-ch{font-size:9.5px;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);font-family:'DM Mono',monospace;text-align:right;font-weight:500}
+.lb-ch.left{text-align:left}
+.lb-rows{max-height:280px;overflow-y:auto}
+.lb-rows::-webkit-scrollbar{width:3px}
+.lb-rows::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.lb-row{display:grid;grid-template-columns:46px 1fr 68px 64px 68px 32px;padding:9px 16px;border-bottom:1px solid var(--border);align-items:center;transition:background .1s;cursor:pointer}
+.lb-row:last-child{border-bottom:none}
+.lb-row:hover{background:var(--surface2)}
+.lb-row.gold-row{background:var(--gold-bg)}
+.lb-row.crossover-alert{background:#fffbeb}
+
+.rank-cell{font-size:12px;font-weight:600;color:var(--text2);font-family:'DM Mono',monospace}
+.lb-row.gold-row .rank-cell{color:var(--gold)}
+.name-cell{font-size:12.5px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.name-text{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.birth-year{font-size:10px;font-family:'DM Mono',monospace;color:var(--text3);flex-shrink:0}
+.score-cell{font-size:12px;font-family:'DM Mono',monospace;color:var(--text);text-align:right;font-weight:600}
+.stunt-cell,.tumble-cell{font-size:11px;font-family:'DM Mono',monospace;color:var(--text2);text-align:right}
+.edit-cell{text-align:right}
+.edit-btn{background:none;border:none;cursor:pointer;padding:3px;color:var(--text3);border-radius:3px;transition:color .12s,background .12s;font-size:14px;line-height:1}
+.edit-btn:hover{color:var(--text);background:var(--surface2)}
+.empty-lb{padding:20px 16px;text-align:center;font-size:12px;color:var(--text3)}
+
+/* ── ALT BADGE ── */
+.alt-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-family:'DM Mono',monospace;font-weight:500;background:var(--surface2);border:1px solid var(--border2);border-radius:20px;padding:2px 7px;color:var(--text2);white-space:nowrap;cursor:pointer;transition:background .12s,border-color .12s;text-decoration:none;font-family:'DM Mono',monospace}
+.alt-badge.has-alts{background:var(--blue-bg);border-color:rgba(26,95,180,0.25);color:var(--blue)}
+.alt-badge.has-alts:hover{background:#d0e4fa;border-color:rgba(26,95,180,0.45)}
+button.alt-badge{font-family:'DM Mono',monospace;line-height:1.4}
+
+/* ── CROSSOVER BADGE ── */
+.crossover-badge{display:inline-flex;align-items:center;gap:3px;font-size:9px;font-weight:600;background:var(--amber-bg);border:1px solid rgba(124,85,0,0.3);border-radius:20px;padding:1px 6px;color:var(--amber);white-space:nowrap}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(2px)}
+.modal{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow-lg);width:100%;max-width:480px;border:1px solid var(--border);overflow:hidden}
+.modal-header{padding:16px 20px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:15px;font-weight:600}
+.modal-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3);padding:2px 6px;border-radius:3px;transition:color .12s}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px}
+.modal-field{margin-bottom:16px}
+.modal-field:last-child{margin-bottom:0}
+.field-label{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.field-value{font-size:13px;color:var(--text);font-weight:500}
+.field-sub{font-size:11px;color:var(--text3);font-family:'DM Mono',monospace;margin-top:1px}
+
+/* dropdown */
+.placement-select{width:100%;padding:8px 10px;border:1px solid var(--border2);border-radius:var(--radius-sm);background:var(--surface);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;transition:border-color .15s;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238c8c86' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px}
+.placement-select:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,95,180,0.08)}
+.placement-select option:disabled{color:var(--text3)}
+
+/* tier lock warning */
+.tier-lock-msg{font-size:11px;color:var(--amber);background:var(--amber-bg);border:1px solid rgba(124,85,0,0.2);border-radius:var(--radius-xs);padding:7px 10px;margin-top:8px;line-height:1.45}
+.crossover-warning{font-size:11px;color:var(--orange);background:var(--orange-bg);border:1px solid rgba(230,81,0,0.2);border-radius:var(--radius-xs);padding:7px 10px;margin-top:8px;line-height:1.45;font-weight:500}
+
+/* alts list in modal */
+.alts-list{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px}
+.alt-pill{font-size:10px;font-family:'DM Mono',monospace;background:var(--blue-bg);color:var(--blue);border:1px solid rgba(26,95,180,0.2);border-radius:20px;padding:2px 8px}
+
+/* modal actions */
+.modal-actions{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.btn-cancel{background:none;border:1px solid var(--border2);border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;padding:8px 16px;cursor:pointer;color:var(--text2);transition:background .12s}
+.btn-cancel:hover{background:var(--surface2)}
+.btn-confirm{background:var(--text);color:#fff;border:none;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:8px 20px;cursor:pointer;transition:opacity .15s}
+.btn-confirm:hover{opacity:.85}
+
+/* ── DATA PREVIEW ── */
+.data-preview{margin-top:10px;border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;font-size:11px}
+.data-preview-head{background:var(--surface2);padding:5px 10px;font-size:10px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);border-bottom:1px solid var(--border)}
+.data-preview table{width:100%;border-collapse:collapse}
+.data-preview td,.data-preview th{padding:5px 10px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap;font-family:'DM Mono',monospace}
+.data-preview tr:last-child td{border-bottom:none}
+.data-preview th{background:var(--surface2);font-size:9.5px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.data-preview td{font-size:11px;color:var(--text)}
+.data-preview td.score-good{color:var(--green);font-weight:600}
+.data-preview td.score-zero{color:var(--red)}
+.preview-more{padding:5px 10px;font-size:10px;color:var(--text3);background:var(--surface2);text-align:center;border-top:1px solid var(--border)}
+
+/* ── INPUT TABS ── */
+.input-tabs{display:flex;gap:0;margin-bottom:12px;border-bottom:1px solid var(--border)}
+.input-tab{padding:6px 14px;font-size:11px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:color .12s,border-color .12s;user-select:none}
+.input-tab:hover{color:var(--text2)}
+.input-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.input-panel{display:none}
+.input-panel.active{display:block}
+
+/* ── DROP ZONE ── */
+.drop-zone{border:1.5px dashed var(--border2);border-radius:var(--radius-sm);background:var(--surface2);padding:28px 20px;text-align:center;cursor:pointer;transition:border-color .15s,background .15s;position:relative;min-height:120px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--blue);background:var(--blue-bg)}
+.drop-zone.drag-over{border-style:solid}
+.drop-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.drop-icon{font-size:28px;line-height:1;color:var(--text3)}
+.drop-zone:hover .drop-icon,.drop-zone.drag-over .drop-icon{color:var(--blue)}
+.drop-label{font-size:12px;font-weight:500;color:var(--text2)}
+.drop-sub{font-size:11px;color:var(--text3)}
+.drop-zone.has-file{border-color:var(--green);background:var(--green-bg)}
+.drop-zone.has-file .drop-icon{color:var(--green)}
+.drop-zone.has-file .drop-label{color:var(--green)}
+.pdf-processing{font-size:11px;color:var(--blue);font-family:'DM Mono',monospace;margin-top:6px;min-height:16px}
+.pdf-error{font-size:11px;color:var(--red);margin-top:6px;min-height:16px}
+
+@media(max-width:800px){
+  .main,.app-header{padding-left:14px;padding-right:14px}
+  .cards-grid{grid-template-columns:1fr}
+  .team-grid{grid-template-columns:1fr}
+  .app-header-inner{flex-direction:column;align-items:flex-start}
+  .lb-col-heads,.lb-row{grid-template-columns:40px 1fr 60px 56px 60px 28px;padding-left:10px;padding-right:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="app-header">
+  <div class="app-header-inner">
+    <div>
+      <div class="eyebrow">USASF 2025–2026 Official Age Grid</div>
+      <div class="app-title">Cheer Gym Tryout Evaluator</div>
+      <div class="app-subtitle">Primary placement engine with alternative team tracking &amp; manual override</div>
+    </div>
+    <div class="header-badge">Smart Routing v2</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="cards-grid">
+    <div>
+      <div class="step-row"><div class="step-badge">1</div><div class="step-heading">Paste tryout data</div></div>
+      <div class="card">
+        <div class="input-tabs">
+          <div class="input-tab active" id="tabPaste" onclick="switchTab('paste')">Paste text</div>
+          <div class="input-tab" id="tabPdf" onclick="switchTab('pdf')">Upload PDF or CSV</div>
+        </div>
+
+        <!-- PASTE PANEL -->
+        <div class="input-panel active" id="panelPaste">
+          <textarea id="pasteArea" placeholder="Paste tab or comma separated rows.&#10;Required headers (case-insensitive): name, birthYear, gender, tierPreference&#10;Then one column per skill.&#10;&#10;Accepted TRUE values:  TRUE · YES · Y · 1 · ✓&#10;Accepted FALSE values: FALSE · NO · N · 0 · X"></textarea>
+          <div class="paste-note"><kbd>Ctrl+V</kbd> or <kbd>Cmd+V</kbd> <span>· tab or comma · case-insensitive headers</span></div>
+        </div>
+
+        <!-- FILE UPLOAD PANEL -->
+        <div class="input-panel" id="panelPdf">
+          <div class="drop-zone" id="dropZone"
+               ondragover="handleDragOver(event)"
+               ondragleave="handleDragLeave(event)"
+               ondrop="handleDrop(event)">
+            <input type="file" id="fileInput" accept=".pdf,.csv,.tsv,.txt" onchange="handleFileInput(event)">
+            <div class="drop-icon" id="dropIcon">&#128196;</div>
+            <div class="drop-label" id="dropLabel">Drop a file here, or click to browse</div>
+            <div class="drop-sub" id="dropSub">Supports PDF, CSV, TSV, or TXT roster files</div>
+          </div>
+          <div class="pdf-processing" id="pdfStatus"></div>
+        </div>
+
+        <div class="athlete-count" id="athleteCount">No data loaded — paste your roster or upload a file above</div>
+        <div id="dataPreview" style="display:none"></div>
+      </div>
+    </div>
+    <div>
+      <div class="step-row"><div class="step-badge">2</div><div class="step-heading">Select offered teams</div></div>
+      <div class="card">
+        <div class="card-label">All USASF 2025-2026 divisions — toggle on / off</div>
+        <div class="team-scroll"><div id="teamList"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider-row">
+    <div class="divider-line"></div>
+    <div class="step-row" style="margin-bottom:0"><div class="step-badge">3</div><div class="step-heading">Run analysis</div></div>
+    <div class="divider-line"></div>
+  </div>
+  <button class="run-btn" onclick="runAnalysis()">&#9654; Run tryout sorting &amp; analysis</button>
+
+  <div id="resultsSection" style="display:none">
+    <div class="results-meta">
+      <span class="results-title">Leaderboards</span>
+      <span class="results-pill" id="resultsTag"></span>
+    </div>
+    <div id="leaderboards"></div>
+  </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-overlay" id="editModal" style="display:none" onclick="closeModalOnBg(event)">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modalAthlName">Edit Placement</div>
+      <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-field">
+        <div class="field-label">Athlete</div>
+        <div class="field-value" id="modalName">—</div>
+        <div class="field-sub" id="modalMeta">—</div>
+      </div>
+      <div class="modal-field">
+        <div class="field-label">Current scores</div>
+        <div class="field-value" id="modalScores">—</div>
+      </div>
+      <div class="modal-field">
+        <div class="field-label">Team placement</div>
+        <select class="placement-select" id="placementSelect" onchange="onPlacementChange()"></select>
+        <div id="tierLockMsg" style="display:none" class="tier-lock-msg">
+          &#9888; USASF Rule: Athletes may not be rostered in both Elite and Prep tiers simultaneously. Prep options are locked while this athlete is assigned to an Elite team.
+        </div>
+        <div id="crossoverMsg" style="display:none" class="crossover-warning">
+          &#9888; USASF Crossover Alert: This athlete is already on 3 rosters. Assigning to a 4th team exceeds the maximum allowed crossover limit per competition.
+        </div>
+      </div>
+      <div class="modal-field" id="altsSection" style="display:none">
+        <div class="field-label">All legal alternatives</div>
+        <div class="alts-list" id="altsList"></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-confirm" onclick="confirmPlacement()">Confirm placement</button>
+    </div>
+  </div>
+</div>
+
+<!-- PDF.js from Mozilla CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+// Configure PDF.js worker
+if(typeof pdfjsLib!=='undefined'){
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+</script>
+<script>
+// ══════════════════════════════════════════════════
+// SKILL TIER DEFINITIONS
+// ══════════════════════════════════════════════════
+const TUMBLING_TIERS={1:['forwardRoll','backwardRoll','handstand','handstandBridgeBack','frontWalkover','backWalkover','cartwheel','roundoff'],2:['standingSingleBHS','backWalkoverBHS','frontHandspring','roundoffBHS','roundoffConsecutiveBHS'],3:['standingConsecutiveBHS','roundoffBackTuck','roundoffBHSBackTuck','punchFront','frontAerial'],4:['standingSingleTuck','standingBHSTuck','standingBHSLayout','roundoffBHSLayout','specialtyRunningLayout'],5:['jumpStandingTuck','standingBHSSeriesLayoutFull','roundoffBHSFull','specialtyRunningFull'],6:['standingSingleFull','standingBHSSeriesDoubleFull','roundoffBHSDoubleFull','eliteBoundingPasses']};
+const STUNT_TIERS={1:['thighStand','shoulderSit','prepLevelShowAndGo','twoLegWaistLevelStunt'],2:['prepLevelTwoLegExtension','shoulderStand','straightCradleFromPrep','bracedOneLegPrepLevel'],3:['extendedTwoLegStunt','prepLevelOneLegLib','fullUpToPrepLevel','straightCradleFromExtension'],4:['extendedOneLegStunt','fullUpToExtendedTwoLeg','switchUpToPrepLevelLib','fullDownDismountFromExtension'],5:['fullUpToExtendedOneLeg','doubleUpToPrepLevel','rewindToPrepLevel','kickFullCradleDismount'],6:['doubleUpToExtendedOneLeg','rewindToExtendedPosition','freeFlippingTransitions','kickDoubleCradleDismount']};
+const ALL_T=Object.values(TUMBLING_TIERS).flat();
+const ALL_S=Object.values(STUNT_TIERS).flat();
+
+// ══════════════════════════════════════════════════
+// DIVISION DEFINITIONS (USASF 2025-2026 Age Grid)
+// ══════════════════════════════════════════════════
+const DIVISIONS=[
+  // Elite Club
+  {tier:'Elite Club',key:'EliteTiny1',    label:'Tiny',           badge:'L1',   byMin:2018,byMax:2020,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteMini1',    label:'Mini',           badge:'L1',   byMin:2016,byMax:2019,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteMini2',    label:'Mini',           badge:'L2',   byMin:2016,byMax:2019,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteYouth1',   label:'Youth',          badge:'L1',   byMin:2013,byMax:2018,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteYouth2',   label:'Youth',          badge:'L2',   byMin:2013,byMax:2018,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteYouth3',   label:'Youth',          badge:'L3',   byMin:2013,byMax:2018,              minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteYouth4',   label:'Youth',          badge:'L4',   byMin:2013,byMax:2018,              minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteYouth5',   label:'Youth',          badge:'L5',   byMin:2013,byMax:2018,              minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteJunior1',  label:'Junior',         badge:'L1',   byMin:2010,byMax:2017,              minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteJunior2',  label:'Junior',         badge:'L2',   byMin:2010,byMax:2017,              minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteJunior3',  label:'Junior',         badge:'L3',   byMin:2010,byMax:2017,              minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteJunior4',  label:'Junior',         badge:'L4',   byMin:2010,byMax:2017,              minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteJunior42', label:'Junior',         badge:'L4.2', byMin:2010,byMax:2017,              minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteJunior5',  label:'Junior',         badge:'L5',   byMin:2010,byMax:2017,              minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteJunior6',  label:'Junior',         badge:'L6',   byMin:2010,byMax:2017,              minS:6,minT:6,min:5},
+  {tier:'Elite Club',key:'EliteSenior1',  label:'Senior',         badge:'L1',   byMin:2006,byMax:2013,byMinMonth:true,minS:1,minT:1,min:5},
+  {tier:'Elite Club',key:'EliteSenior2',  label:'Senior',         badge:'L2',   byMin:2006,byMax:2013,byMinMonth:true,minS:2,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSenior3',  label:'Senior',         badge:'L3',   byMin:2006,byMax:2013,byMinMonth:true,minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteSenior4',  label:'Senior',         badge:'L4',   byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSenior42', label:'Senior',         badge:'L4.2', byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSenior5',  label:'Senior',         badge:'L5',   byMin:2006,byMax:2013,byMinMonth:true,minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed3',label:'Senior Coed',  badge:'L3',   byMin:2006,byMax:2013,byMinMonth:true,minS:3,minT:3,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed4',label:'Senior Coed',  badge:'L4',   byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed42',label:'Senior Coed', badge:'L4.2', byMin:2006,byMax:2013,byMinMonth:true,minS:4,minT:2,min:5},
+  {tier:'Elite Club',key:'EliteSeniorCoed5',label:'Senior Coed',  badge:'L5',   byMin:2006,byMax:2013,byMinMonth:true,minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpen4',label:'Senior Open',  badge:'L4',   byMax:2008,byMaxMonth:true,         minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpen5',label:'Senior Open',  badge:'L5',   byMax:2008,byMaxMonth:true,         minS:5,minT:5,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpenCoed4',label:'Senior Open Coed',badge:'L4',byMax:2008,byMaxMonth:true,    minS:4,minT:4,min:5},
+  {tier:'Elite Club',key:'EliteSeniorOpenCoed5',label:'Senior Open Coed',badge:'L5',byMax:2008,byMaxMonth:true,    minS:5,minT:5,min:5},
+  // Elite International
+  {tier:'Elite International',key:'IntlOpen6',  label:'International Open',   badge:'L6',   byMax:2008,byMaxMonth:true,minS:6,minT:6,min:16},
+  {tier:'Elite International',key:'IntlOpen7',  label:'International Open',   badge:'L7',   byMax:2008,byMaxMonth:true,minS:6,minT:6,min:16},
+  {tier:'Elite International',key:'IntlOpenNT6',label:'International Open NT',badge:'L6 NT',byMax:2008,byMaxMonth:true,minS:6,minT:'NT',min:16},
+  {tier:'Elite International',key:'U181',label:'U18',badge:'L1',byMin:2007,byMax:2012,minS:1,minT:1,min:16},
+  {tier:'Elite International',key:'U182',label:'U18',badge:'L2',byMin:2007,byMax:2012,minS:2,minT:2,min:16},
+  {tier:'Elite International',key:'U183',label:'U18',badge:'L3',byMin:2007,byMax:2012,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U184',label:'U18',badge:'L4',byMin:2007,byMax:2012,minS:4,minT:4,min:16},
+  {tier:'Elite International',key:'U18Coed3',label:'U18 Coed',badge:'L3',byMin:2007,byMax:2012,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U18Coed4',label:'U18 Coed',badge:'L4',byMin:2007,byMax:2012,minS:4,minT:4,min:16},
+  {tier:'Elite International',key:'U161',label:'U16',badge:'L1',byMin:2009,byMax:2014,minS:1,minT:1,min:16},
+  {tier:'Elite International',key:'U162',label:'U16',badge:'L2',byMin:2009,byMax:2014,minS:2,minT:2,min:16},
+  {tier:'Elite International',key:'U163',label:'U16',badge:'L3',byMin:2009,byMax:2014,minS:3,minT:3,min:16},
+  {tier:'Elite International',key:'U164',label:'U16',badge:'L4',byMin:2009,byMax:2014,minS:4,minT:4,min:16},
+  // Prep
+  {tier:'Prep',key:'PrepTiny11',  label:'Prep Tiny',  badge:'L1.1',byMin:2018,byMax:2020,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini11',  label:'Prep Mini',  badge:'L1.1',byMin:2016,byMax:2019,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini21',  label:'Prep Mini',  badge:'L2.1',byMin:2016,byMax:2019,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepMini22',  label:'Prep Mini',  badge:'L2.2',byMin:2016,byMax:2019,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepYouth11', label:'Prep Youth', badge:'L1.1',byMin:2013,byMax:2018,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth21', label:'Prep Youth', badge:'L2.1',byMin:2013,byMax:2018,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth22', label:'Prep Youth', badge:'L2.2',byMin:2013,byMax:2018,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepYouth31', label:'Prep Youth', badge:'L3.1',byMin:2013,byMax:2018,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepYouth32', label:'Prep Youth', badge:'L3.2',byMin:2013,byMax:2018,minS:3,minT:2,min:5},
+  {tier:'Prep',key:'PrepJunior11',label:'Prep Junior',badge:'L1.1',byMin:2010,byMax:2017,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior21',label:'Prep Junior',badge:'L2.1',byMin:2010,byMax:2017,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior22',label:'Prep Junior',badge:'L2.2',byMin:2010,byMax:2017,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepJunior31',label:'Prep Junior',badge:'L3.1',byMin:2010,byMax:2017,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepJunior32',label:'Prep Junior',badge:'L3.2',byMin:2010,byMax:2017,minS:3,minT:2,min:5},
+  {tier:'Prep',key:'PrepSenior11',label:'Prep Senior',badge:'L1.1',byMin:2006,byMax:2014,byMinMonth:true,minS:1,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior21',label:'Prep Senior',badge:'L2.1',byMin:2006,byMax:2014,byMinMonth:true,minS:2,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior22',label:'Prep Senior',badge:'L2.2',byMin:2006,byMax:2014,byMinMonth:true,minS:2,minT:2,min:5},
+  {tier:'Prep',key:'PrepSenior31',label:'Prep Senior',badge:'L3.1',byMin:2006,byMax:2014,byMinMonth:true,minS:3,minT:1,min:5},
+  {tier:'Prep',key:'PrepSenior32',label:'Prep Senior',badge:'L3.2',byMin:2006,byMax:2014,byMinMonth:true,minS:3,minT:2,min:5},
+];
+
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+const DEFAULT_ON=new Set(['EliteTiny1','EliteMini2','EliteJunior42','EliteSeniorCoed5','IntlOpen6','IntlOpenNT6','PrepSenior32','PrepJunior32']);
+const activeDiv={};
+DIVISIONS.forEach(d=>{activeDiv[d.key]=DEFAULT_ON.has(d.key);});
+
+let athletes=[];
+// placements: athleteId → divKey (manual override or auto-assigned primary)
+let placements={};
+// modalState
+let modalAthId=null, modalPendingKey=null;
+
+// ══════════════════════════════════════════════════
+// CORE CALCULATIONS
+// ══════════════════════════════════════════════════
+function tLevel(skills){let l=0;for(let t=1;t<=6;t++){if(TUMBLING_TIERS[t].every(k=>!!skills[k]))l=t;else break;}return l;}
+function sLevel(skills){let l=0;for(let t=1;t<=6;t++){if(STUNT_TIERS[t].every(k=>!!skills[k]))l=t;else break;}return l;}
+function calcScore(sL,tL){return Math.round((sL+tL/10)*10)/10;}
+
+function evalA(a){
+  const tL=tLevel(a.tumblingSkills||{});
+  const sL=sLevel(a.stuntSkills||{});
+  return{...a,tL,sL,score:calcScore(sL,tL)};
+}
+
+function isEligible(a,div){
+  const b=a.birthYear,s=a.sL,t=a.tL;
+  if(b==null)return false;
+  if(div.byMin!==undefined&&b<div.byMin)return false;
+  if(div.byMax!==undefined&&b>div.byMax)return false;
+  if(s<div.minS)return false;
+  if(div.minT==='NT'){if(t!==0)return false;}
+  else{if(t<div.minT)return false;}
+  return true;
+}
+
+// Returns all div keys (from activeDiv enabled list) an athlete qualifies for.
+// Athlete MUST already have sL and tL computed (i.e. passed through evalA).
+function getAllQualifyingDivs(a){
+  if(a.sL===undefined||a.tL===undefined){
+    // Safety: compute on the fly if missed
+    const e=evalA(a);
+    return DIVISIONS.filter(d=>activeDiv[d.key]&&isEligible(e,d)).map(d=>d.key);
+  }
+  return DIVISIONS.filter(d=>activeDiv[d.key]&&isEligible(a,d)).map(d=>d.key);
+}
+
+// Primary best-fit = the qualifying division with the highest minimum demand
+// (minS + minT/10) that the athlete still meets — i.e. most challenging legal placement.
+function getBestDiv(a,qualKeys){
+  if(!qualKeys.length)return null;
+  let best=null,bestVal=-1;
+  qualKeys.forEach(key=>{
+    const div=DIVISIONS.find(d=>d.key===key);
+    if(!div)return;
+    const minT=div.minT==='NT'?0:Number(div.minT||0);
+    const val=div.minS+minT/10;
+    if(val>bestVal){bestVal=val;best=key;}
+  });
+  return best;
+}
+
+// Crossover count: how many active-div rosters is this athlete assigned to
+function getCrossoverCount(athleteId){
+  return Object.entries(placements)
+    .filter(([id,key])=>id===athleteId&&key&&activeDiv[key])
+    .length;
+}
+
+// Get tier of a div key
+function getTier(key){
+  const d=DIVISIONS.find(x=>x.key===key);
+  return d?d.tier:'';
+}
+
+function isEliteTier(t){return t==='Elite Club'||t==='Elite International';}
+function isPrepTier(t){return t==='Prep';}
+
+function golfRank(sorted){
+  const out=[];let i=0;
+  while(i<sorted.length){
+    const sc=sorted[i].score;let j=i;
+    while(j<sorted.length&&sorted[j].score===sc)j++;
+    const tie=j-i>1;
+    for(let k=i;k<j;k++)out.push({...sorted[k],rank:i+1,tie});
+    i=j;
+  }
+  return out;
+}
+
+// ══════════════════════════════════════════════════
+// CSV / TSV PARSER
+// ══════════════════════════════════════════════════
+function parsePaste(text){
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2)return null;
+  const first=lines[0];
+  const tabs=(first.match(/\t/g)||[]).length;
+  const commas=(first.match(/,/g)||[]).length;
+  const delim=tabs>=commas?'\t':',';
+  const rawH=first.split(delim).map(h=>h.trim());
+  const hMap={};rawH.forEach((h,i)=>{hMap[h.toLowerCase()]=i;});
+  if(hMap['name']===undefined||hMap['birthyear']===undefined)return null;
+  const get=(cols,key)=>{const idx=hMap[key.toLowerCase()];return idx!==undefined?(cols[idx]||'').trim():'';};
+  return lines.slice(1).map((line,i)=>{
+    const cols=line.split(delim).map(c=>c.trim());
+    const ts={};ALL_T.forEach(s=>{const v=get(cols,s).toUpperCase().trim();ts[s]=v==='TRUE'||v==='YES'||v==='Y'||v==='1'||v==='✓'||v==='✔'||v==='☑';});
+    const ss={};ALL_S.forEach(s=>{const v=get(cols,s).toUpperCase().trim();ss[s]=v==='TRUE'||v==='YES'||v==='Y'||v==='1'||v==='✓'||v==='✔'||v==='☑';});
+    const rawYear=parseInt(get(cols,'birthYear'));
+    const rawName=get(cols,'name');
+    return{id:String(i+1),name:rawName||`[row ${i+2}]`,birthYear:isNaN(rawYear)?null:rawYear,gender:get(cols,'gender'),tierPreference:get(cols,'tierPreference'),tumblingSkills:ts,stuntSkills:ss};
+  }).filter(a=>a.name&&!a.name.startsWith('[row'));
+}
+
+// ══════════════════════════════════════════════════
+// AUTO-ROUTING: run after data load or div toggle
+// ══════════════════════════════════════════════════
+function autoRoute(){
+  if(!athletes.length)return;
+  placements={};
+  // Always evaluate first so sL/tL are present before eligibility checks
+  const evaled=athletes.map(evalA);
+  evaled.forEach(a=>{
+    const quals=getAllQualifyingDivs(a);
+    const primary=getBestDiv(a,quals);
+    if(primary){
+      placements[a.id]=primary;
+    }
+    // Debug: log each athlete's routing in console
+    console.log(
+      `[Route] ${a.name} BY:${a.birthYear} sL:${a.sL} tL:${a.tL} score:${a.score}`,
+      `→ primary: ${primary||'NONE'}`,
+      `| all quals: [${quals.join(', ')}]`
+    );
+  });
+  const routed=Object.keys(placements).length;
+  console.log(`[autoRoute] ${routed}/${athletes.length} athletes routed`);
+}
+
+// ══════════════════════════════════════════════════
+// RENDER TEAM CHECKLIST
+// ══════════════════════════════════════════════════
+function renderTeams(){
+  const el=document.getElementById('teamList');el.innerHTML='';
+  const tiers=[...new Set(DIVISIONS.map(d=>d.tier))];
+  tiers.forEach(tier=>{
+    const divs=DIVISIONS.filter(d=>d.tier===tier);
+    const section=document.createElement('div');section.className='tier-section';
+    const head=document.createElement('div');head.className='tier-heading';head.textContent=tier;
+    section.appendChild(head);
+    const grid=document.createElement('div');grid.className='team-grid';
+    divs.forEach(d=>{
+      const on=activeDiv[d.key];
+      const item=document.createElement('div');
+      item.className='team-item'+(on?' on':'');
+      item.innerHTML=`<div class="cb-box">${on?'&#10003;':''}</div><span class="team-name">${d.label}</span><span class="team-badge-pill">${d.badge}</span>`;
+      item.onclick=()=>{
+        activeDiv[d.key]=!activeDiv[d.key];
+        renderTeams();
+        // if results are showing, re-route and re-render
+        if(document.getElementById('resultsSection').style.display!=='none'){
+          autoRoute();renderLeaderboards();
+        }
+      };
+      grid.appendChild(item);
+    });
+    section.appendChild(grid);
+    el.appendChild(section);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// RENDER LEADERBOARDS
+// ══════════════════════════════════════════════════
+function tierTagClass(tier){
+  if(tier.startsWith('Elite Club'))return 'lb-tier-elite';
+  if(tier.startsWith('Elite Int'))return 'lb-tier-intl';
+  return 'lb-tier-prep';
+}
+
+function renderLeaderboards(){
+  // Always evaluate first so sL/tL are present for all downstream calls
+  const evaled=athletes.map(evalA);
+  const evalMap=Object.fromEntries(evaled.map(a=>[a.id,a]));
+
+  const container=document.getElementById('leaderboards');container.innerHTML='';
+  const chosen=DIVISIONS.filter(d=>activeDiv[d.key]);
+
+  const routedCount=Object.keys(placements).length;
+  document.getElementById('resultsTag').textContent=
+    `${evaled.length} athletes · ${routedCount} routed · ${chosen.length} divisions`;
+
+  if(!chosen.length){
+    container.innerHTML='<div style="padding:40px;text-align:center;font-size:12px;color:#8c8c86">No divisions selected.</div>';
+    return;
+  }
+
+  // Show a top-level warning if nothing routed at all
+  if(routedCount===0&&evaled.length>0){
+    container.innerHTML=`<div style="background:#fff8e1;border:1px solid rgba(124,85,0,0.2);border-radius:8px;padding:14px 18px;font-size:12px;color:#7c5500;margin-bottom:14px">
+      <strong>⚠ No athletes matched any active division.</strong> Check that the selected divisions overlap with your athletes' birth years and skill levels.
+      Open the browser console (F12) to see per-athlete routing debug output.
+    </div>`;
+    return;
+  }
+
+  chosen.forEach(div=>{
+    const rows=evaled
+      .filter(a=>placements[a.id]===div.key)
+      .sort((a,b)=>b.score-a.score);
+    const ranked=golfRank(rows);
+    const warn=rows.length<div.min;
+
+    const lb=document.createElement('div');lb.className='lb';
+
+    let html=`<div class="lb-head">
+      <span class="lb-div-name">${div.label}</span>
+      <span class="lb-level-tag">${div.badge}</span>
+      <span class="${tierTagClass(div.tier)}">${div.tier}</span>
+      <span class="lb-n">${rows.length} athlete${rows.length!==1?'s':''}</span>
+    </div>`;
+
+    if(warn)html+=`<div class="lb-alert">
+      <span class="lb-alert-icon">&#9651;</span>
+      <div class="lb-alert-text"><strong>USASF compliance alert:</strong> ${rows.length} athlete${rows.length!==1?'s':''} on roster — minimum required is ${div.min}. A penalty may be assessed for taking the floor below minimum.</div>
+    </div>`;
+
+    if(!ranked.length){
+      html+=`<div class="empty-lb">No athletes routed to this division.</div>`;
+    } else {
+      html+=`<div class="lb-col-heads">
+        <span class="lb-ch left">Rank</span>
+        <span class="lb-ch left">Athlete</span>
+        <span class="lb-ch">Score</span>
+        <span class="lb-ch">Stunt</span>
+        <span class="lb-ch">Tumble</span>
+        <span class="lb-ch"></span>
+      </div><div class="lb-rows">`;
+
+      ranked.forEach(r=>{
+        // Use the pre-evaluated version so getAllQualifyingDivs has sL/tL
+        const re=evalMap[r.id]||r;
+        const allQuals=getAllQualifyingDivs(re);
+        const altCount=allQuals.filter(k=>k!==div.key).length;
+        const crossCount=getCrossoverCount(r.id);
+        const byLabel=r.birthYear!=null?r.birthYear:'—';
+        const isGold=r.rank===1;
+        const isCrossover=crossCount>3;
+
+        let badgesHtml='';
+        if(altCount>0){
+          // Button: clicking opens the modal — stop propagation so row's onclick doesn't double-fire
+          badgesHtml+=`<button class="alt-badge has-alts" onclick="event.stopPropagation();openModal('${r.id}','${div.key}')" title="View ${altCount} alternative placement${altCount!==1?'s':''} — click to reassign">&#8645; ${altCount} alt${altCount!==1?'s':''}</button>`;
+        }
+        if(isCrossover){
+          badgesHtml+=` <span class="crossover-badge">&#9888; Crossover limit</span>`;
+        }
+
+        html+=`<div class="lb-row${isGold?' gold-row':''}${isCrossover?' crossover-alert':''}" onclick="openModal('${r.id}','${div.key}')" title="Click to edit placement" style="cursor:pointer" data-id="${r.id}" data-div="${div.key}">
+          <span class="rank-cell">${r.tie?'T':''}${r.rank}</span>
+          <span class="name-cell">
+            <span class="name-row">
+              <span class="name-text">${r.name}</span>
+              <span class="birth-year">${byLabel}</span>
+            </span>
+            ${badgesHtml?`<span style="display:flex;gap:3px;flex-wrap:wrap;margin-top:2px">${badgesHtml}</span>`:''}
+          </span>
+          <span class="score-cell">${r.score.toFixed(1)}</span>
+          <span class="stunt-cell">L${r.sL}</span>
+          <span class="tumble-cell">L${r.tL}</span>
+          <span class="edit-cell">
+            <button class="edit-btn" onclick="event.stopPropagation();openModal('${r.id}','${div.key}')" title="Edit placement">&#9998;</button>
+          </span>
+        </div>`;
+      });
+      html+=`</div>`;
+    }
+    lb.innerHTML=html;
+    container.appendChild(lb);
+  });
+}
+
+// ══════════════════════════════════════════════════
+// EDIT MODAL
+// ══════════════════════════════════════════════════
+function openModal(athleteId, currentDivKey){
+  modalAthId=athleteId;
+  modalPendingKey=currentDivKey;
+
+  const evaled=athletes.map(evalA);
+  const a=evaled.find(x=>x.id===athleteId);
+  if(!a)return;
+
+  document.getElementById('modalAthlName').textContent=a.name;
+  document.getElementById('modalName').textContent=a.name;
+  document.getElementById('modalMeta').textContent=
+    `Birth year: ${a.birthYear!=null?a.birthYear:'—'} · Gender: ${a.gender||'—'}`;
+  document.getElementById('modalScores').textContent=
+    `Score ${a.score.toFixed(1)} · Stunt L${a.sL} · Tumble L${a.tL}`;
+
+  const allQuals=getAllQualifyingDivs(a);
+
+  // Build dropdown: all qualifying divs are selectable — switching is a replacement,
+  // not simultaneous rostering, so the USASF cross-tier rule does not apply here.
+  const sel=document.getElementById('placementSelect');
+  sel.innerHTML='';
+  allQuals.forEach(key=>{
+    const div=DIVISIONS.find(d=>d.key===key);
+    if(!div)return;
+    const opt=document.createElement('option');
+    opt.value=key;
+    opt.textContent=`${div.label} ${div.badge} (${div.tier})`;
+    if(key===currentDivKey)opt.selected=true;
+    sel.appendChild(opt);
+  });
+  if(!allQuals.length){
+    const opt=document.createElement('option');
+    opt.value='';opt.textContent='No qualifying divisions';opt.disabled=true;sel.appendChild(opt);
+  }
+
+  // Show alts list
+  const altKeys=allQuals.filter(k=>k!==currentDivKey);
+  const altsSection=document.getElementById('altsSection');
+  const altsList=document.getElementById('altsList');
+  if(altKeys.length){
+    altsList.innerHTML=altKeys.map(k=>{
+      const d=DIVISIONS.find(x=>x.key===k);
+      return d?`<span class="alt-pill">${d.label} ${d.badge}</span>`:'';
+    }).join('');
+    altsSection.style.display='block';
+  } else {
+    altsSection.style.display='none';
+  }
+
+  // Cross-tier lock is NOT shown here — each athlete has exactly one placement,
+  // so changing it is always a replacement, never simultaneous dual-tier rostering.
+  document.getElementById('tierLockMsg').style.display='none';
+
+  // Crossover warning
+  const crossCount=getCrossoverCount(athleteId);
+  document.getElementById('crossoverMsg').style.display=crossCount>3?'block':'none';
+
+  document.getElementById('editModal').style.display='flex';
+}
+
+function onPlacementChange(){
+  const sel=document.getElementById('placementSelect');
+  const newKey=sel.value;
+  modalPendingKey=newKey;
+
+  // Crossover check: count OTHER placements for this athlete, see if adding this would exceed 3
+  // (Each athlete has exactly one primary placement in our model, so we just check if they'd be on >3 active divs)
+  // For simplicity: warn if the new selection would make total placements > 3
+  const crossCount=getCrossoverCount(modalAthId);
+  document.getElementById('crossoverMsg').style.display=crossCount>=3?'block':'none';
+}
+
+function confirmPlacement(){
+  if(!modalAthId||!modalPendingKey)return;
+  // Check crossover limit
+  const crossCount=getCrossoverCount(modalAthId);
+  if(crossCount>=3&&modalPendingKey!==placements[modalAthId]){
+    // Allow but show persistent warning on card
+  }
+  placements[modalAthId]=modalPendingKey;
+  closeModal();
+  renderLeaderboards();
+}
+
+function closeModal(){
+  document.getElementById('editModal').style.display='none';
+  modalAthId=null;modalPendingKey=null;
+}
+
+function closeModalOnBg(e){
+  if(e.target===document.getElementById('editModal'))closeModal();
+}
+
+// ══════════════════════════════════════════════════
+// MAIN RUN
+// ══════════════════════════════════════════════════
+function runAnalysis(){
+  if(!athletes.length){
+    alert('No athlete data loaded. Paste your roster or upload a file first.');
+    return;
+  }
+  console.log(`[runAnalysis] ${athletes.length} athletes in state before routing`);
+  // Log a sample to verify data integrity
+  athletes.slice(0,3).forEach(a=>{
+    const e=evalA(a);
+    console.log(`  Sample: ${a.name} BY:${a.birthYear} sL:${e.sL} tL:${e.tL} score:${e.score}`);
+  });
+  autoRoute();
+  renderLeaderboards();
+  document.getElementById('resultsSection').style.display='block';
+  setTimeout(()=>document.getElementById('resultsSection').scrollIntoView({behavior:'smooth',block:'start'}),80);
+}
+
+// ══════════════════════════════════════════════════
+// PASTE HANDLER
+// ══════════════════════════════════════════════════
+document.getElementById('pasteArea').addEventListener('paste',function(){
+  setTimeout(()=>{
+    const parsed=parsePaste(this.value);
+    if(parsed&&parsed.length){
+      athletes=parsed;
+      placements={};
+      document.getElementById('athleteCount').textContent=
+        `✓ Parsed ${athletes.length} athletes — click Run to generate leaderboards`;
+      showDataPreview(athletes);
+    } else {
+      athletes=[];
+      document.getElementById('athleteCount').textContent=
+        'Could not parse \u2014 ensure "name" and "birthYear" column headers are present';
+      clearDataPreview();
+    }
+  },50);
+});
+
+// ══════════════════════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════════════════════
+function switchTab(tab){
+  document.getElementById('tabPaste').classList.toggle('active', tab==='paste');
+  document.getElementById('tabPdf').classList.toggle('active', tab==='pdf');
+  document.getElementById('panelPaste').classList.toggle('active', tab==='paste');
+  document.getElementById('panelPdf').classList.toggle('active', tab==='pdf');
+}
+
+// ══════════════════════════════════════════════════
+// DRAG & DROP HANDLERS
+// ══════════════════════════════════════════════════
+function handleDragOver(e){
+  e.preventDefault();e.stopPropagation();
+  document.getElementById('dropZone').classList.add('drag-over');
+}
+function handleDragLeave(e){
+  e.preventDefault();
+  document.getElementById('dropZone').classList.remove('drag-over');
+}
+function handleDrop(e){
+  e.preventDefault();e.stopPropagation();
+  document.getElementById('dropZone').classList.remove('drag-over');
+  const file=e.dataTransfer.files[0];
+  if(file) processFile(file);
+}
+function handleFileInput(e){
+  const file=e.target.files[0];
+  if(file) processFile(file);
+}
+
+// ══════════════════════════════════════════════════
+// FILE PROCESSING — routes to PDF or text parser
+// ══════════════════════════════════════════════════
+function setDropState(state, filename){
+  const zone=document.getElementById('dropZone');
+  const icon=document.getElementById('dropIcon');
+  const label=document.getElementById('dropLabel');
+  const sub=document.getElementById('dropSub');
+  zone.classList.remove('has-file');
+  if(state==='loading'){
+    icon.textContent='⏳'; label.textContent='Reading '+filename+'…'; sub.textContent='';
+    document.getElementById('pdfStatus').textContent='Extracting text…';
+    document.getElementById('pdfStatus').style.color='var(--blue)';
+  } else if(state==='success'){
+    zone.classList.add('has-file');
+    icon.textContent='✓'; label.textContent=filename+' loaded';
+    sub.textContent='File parsed successfully';
+    document.getElementById('pdfStatus').textContent='';
+  } else if(state==='error'){
+    icon.textContent='✕'; label.textContent='Could not parse '+filename;
+    sub.textContent='Ensure the file has name and birthYear columns';
+    document.getElementById('pdfStatus').textContent='';
+  } else {
+    icon.textContent='📄'; label.textContent='Drop a file here, or click to browse';
+    sub.textContent='Supports PDF, CSV, TSV, or TXT roster files';
+    document.getElementById('pdfStatus').textContent='';
+  }
+}
+
+function processFile(file){
+  const name=file.name;
+  setDropState('loading', name);
+
+  if(name.toLowerCase().endsWith('.pdf')){
+    extractPdfText(file).then(text=>{
+      ingestText(text, name);
+    }).catch(err=>{
+      console.error('PDF error',err);
+      setDropState('error', name);
+      document.getElementById('pdfStatus').style.color='var(--red)';
+      document.getElementById('pdfStatus').textContent='PDF extraction failed: '+err.message;
+    });
+  } else {
+    // CSV / TSV / TXT — read as plain text
+    const reader=new FileReader();
+    reader.onload=e=>ingestText(e.target.result, name);
+    reader.onerror=()=>setDropState('error', name);
+    reader.readAsText(file);
+  }
+}
+
+// ══════════════════════════════════════════════════
+// PDF TEXT EXTRACTION via PDF.js
+// Returns a flat space-joined string of all text tokens
+// ══════════════════════════════════════════════════
+async function extractPdfText(file){
+  if(typeof pdfjsLib==='undefined') throw new Error('PDF.js library not loaded');
+  const arrayBuffer=await file.arrayBuffer();
+  const pdf=await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+  const allTokens=[];
+  for(let p=1;p<=pdf.numPages;p++){
+    const page=await pdf.getPage(p);
+    const content=await page.getTextContent();
+    content.items.forEach(item=>{
+      const s=(item.str||'').trim();
+      if(s) allTokens.push(s);
+    });
+  }
+  return allTokens.join(' ');
+}
+
+// ══════════════════════════════════════════════════
+// PDF ROSTER PARSER
+// PDF text exports merge column headers (e.g. "handstandhandstandBridgeBack")
+// and produce a flat stream of tokens. This parser:
+//   1. Tokenises the flat string
+//   2. Finds anchor positions: [4-digit year][Gender][Tier][55 × Yes|No]
+//   3. Extracts name by scanning backward to the previous anchor's end
+//   4. Maps Yes/No tokens to the canonical skill arrays in order
+// ══════════════════════════════════════════════════
+function parsePdfRoster(flatText){
+  const ALL_SKILLS=[...ALL_T,...ALL_S];
+  const NUM_SKILLS=ALL_SKILLS.length;
+  const GENDERS=new Set(['male','female']);
+  const TIERS=new Set(['elite','prep','international','novice']);
+  const ynRe=/^(yes|no)$/i;
+  const yearRe=/^\d{4}$/;
+  const nameWordRe=/^[A-Z][a-z]+$/;
+
+  const tokens=flatText.split(/\s+/).filter(Boolean);
+
+  // Find all anchors: position of year token where the pattern matches
+  const anchors=[];
+  for(let i=0;i+3+NUM_SKILLS<=tokens.length;i++){
+    if(yearRe.test(tokens[i])
+      && GENDERS.has((tokens[i+1]||'').toLowerCase())
+      && TIERS.has((tokens[i+2]||'').toLowerCase())){
+      const slice=tokens.slice(i+3,i+3+NUM_SKILLS);
+      if(slice.length===NUM_SKILLS && slice.every(v=>ynRe.test(v))){
+        anchors.push(i);
+        i+=2+NUM_SKILLS; // skip past this record to avoid false matches
+      }
+    }
+  }
+
+  if(!anchors.length) return null;
+
+  return anchors.map((anchorPos,idx)=>{
+    const prevEnd=idx>0 ? anchors[idx-1]+3+NUM_SKILLS : 0;
+    const nameParts=[];
+    let j=anchorPos-1;
+    while(j>=prevEnd && nameWordRe.test(tokens[j])){
+      nameParts.unshift(tokens[j]);
+      j--;
+    }
+
+    const ynValues=tokens.slice(anchorPos+3, anchorPos+3+NUM_SKILLS);
+    const ts={}, ss={};
+    ALL_T.forEach((s,i)=>{ ts[s]=ynValues[i].toLowerCase()==='yes'; });
+    ALL_S.forEach((s,i)=>{ ss[s]=ynValues[ALL_T.length+i].toLowerCase()==='yes'; });
+
+    return {
+      id:String(idx+1),
+      name:nameParts.length ? nameParts.join(' ') : `Athlete ${idx+1}`,
+      birthYear:parseInt(tokens[anchorPos]),
+      gender:tokens[anchorPos+1],
+      tierPreference:tokens[anchorPos+2],
+      tumblingSkills:ts,
+      stuntSkills:ss
+    };
+  });
+}
+
+// ══════════════════════════════════════════════════
+// DATA PREVIEW — shows computed scores so coaches
+// can verify skills were parsed correctly before running
+// ══════════════════════════════════════════════════
+function showDataPreview(athleteList){
+  const el=document.getElementById('dataPreview');
+  if(!el)return;
+  const preview=athleteList.slice(0,8).map(evalA);
+  const more=athleteList.length-preview.length;
+  let html=`<div class="data-preview">
+    <div class="data-preview-head">Parsed preview — verify scores look correct before running</div>
+    <table>
+      <tr><th>Name</th><th>Birth&nbsp;Yr</th><th>Stunt</th><th>Tumble</th><th>Score</th></tr>
+      ${preview.map(a=>{
+        const isZero=a.sL===0&&a.tL===0;
+        return `<tr>
+          <td>${a.name}</td>
+          <td>${a.birthYear??'—'}</td>
+          <td class="${isZero?'score-zero':''}">L${a.sL}</td>
+          <td class="${isZero?'score-zero':''}">L${a.tL}</td>
+          <td class="${isZero?'score-zero':'score-good'}">${a.score.toFixed(1)}</td>
+        </tr>`;
+      }).join('')}
+    </table>
+    ${more>0?`<div class="preview-more">+ ${more} more athlete${more!==1?'s':''}</div>`:''}
+  </div>`;
+  el.innerHTML=html;
+  el.style.display='block';
+}
+function clearDataPreview(){
+  const el=document.getElementById('dataPreview');
+  if(el){el.innerHTML='';el.style.display='none';}
+}
+
+// ══════════════════════════════════════════════════
+// INGEST TEXT — routes to PDF parser or CSV parser
+// ══════════════════════════════════════════════════
+function ingestText(text, filename){
+  const isPdf=filename.toLowerCase().endsWith('.pdf');
+  let parsed=null;
+
+  if(isPdf){
+    parsed=parsePdfRoster(text);
+    console.log('[PDF parser]', parsed ? `${parsed.length} athletes found` : 'no match, falling back to CSV parser');
+  }
+
+  // Fall back to CSV/TSV parser for non-PDF files or well-formatted PDFs
+  if(!parsed||!parsed.length){
+    parsed=parsePaste(text);
+  }
+
+  if(parsed&&parsed.length){
+    athletes=parsed;
+    placements={};
+    setDropState('success', filename);
+    document.getElementById('athleteCount').textContent=
+      `\u2713 Parsed ${athletes.length} athletes from ${filename} \u2014 click Run to generate leaderboards`;
+    showDataPreview(athletes);
+  } else {
+    setDropState('error', filename);
+    clearDataPreview();
+    document.getElementById('athleteCount').textContent=
+      'Could not parse file \u2014 ensure name and birthYear columns are present';
+  }
+}
+
+// ══════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════
+renderTeams();
+</script>
+</body>
+</html>
