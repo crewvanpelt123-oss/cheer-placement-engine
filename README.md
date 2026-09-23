@@ -33,6 +33,6 @@ From this directory, start a static server:
 python3 -m http.server 4173
 ```
 
-Open `http://127.0.0.1:4173/` in a browser.
+Open `http://127.0.0.1:4173/` in a browser. Or https://cheersolutions.netlify.app 
 
 The primary app is contained in `index.html`. `cheer_tryout_verified_v4.html` is preserved as the alternate standalone export found alongside the source material.
